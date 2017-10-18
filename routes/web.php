@@ -11,13 +11,18 @@
 
 #// Consumer facing
 //Redirects to live CE page
-Route::get('/', function () {
-	//Bugsnag::notifyError('ErrorType', 'Test Error');
-    // Validate the request...
-    //return redirect()->;
-	return redirect('https://www.knowledgecoop.com/pages/live-ce');
-	
-});
+// Route::get('/', function () {
+// 	//Bugsnag::notifyError('ErrorType', 'Test Error');
+//     // Validate the request...
+//     //return redirect()->;
+// 	return redirect('https://www.knowledgecoop.com/pages/live-ce');
+//
+// });
+
+Route::get('/','EmailController@TestSend');
+
+
+
 
 
 //Show all tickets for an order
@@ -29,7 +34,7 @@ Route::post('/tickets/register/{key}','TicketsController@update');
 // Admin index
 Route::get('/admin', 'EventsController@index')->middleware('auth');
 
-//Ajax request to handle post info sent from admin page. 
+//Ajax request to handle post info sent from admin page.
 Route::post('/admin/event', 'TransactionsController@catchEvents')->middleware('auth');
 
 //Get all archived orders form shoppify and process them.
@@ -57,7 +62,7 @@ Route::post('/admin/tickets/register/{orderId}', 'TicketsController@adminUpdate'
 
 
 
-////Send Email 
+////Send Email
 Route::post('/admin/email/send-reminder/{id}', 'EmailController@ManualSend')->middleware('auth');
 //Route::get('/admin/email/send-reminder/{id}', 'EmailController@ManualSend')->middleware('auth');
 
