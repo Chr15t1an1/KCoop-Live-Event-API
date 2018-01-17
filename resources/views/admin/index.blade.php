@@ -59,13 +59,24 @@
             // event_data.push([title,event_id]);
             cats[event_id] = title;
           }
-          $.post( "/admin/event", cats );
+          // $.post( "/admin/event", cats );
+
+          $.post( "/admin/event", cats, function(data) {
+                 alert( data );
+              });
+
+
+
       });
       }
 
       function GetallOrders() {
         // Fetch All Live courses and send data to file to be saved
-            $.post( "/admin/event/get-events");
+            // $.post( "/admin/event/get-events");
+
+            $.post( "/admin/event/get-events", function(data) {
+                   alert( data );
+                });
 
         }
 

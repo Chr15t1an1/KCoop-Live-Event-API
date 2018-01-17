@@ -34,6 +34,7 @@ Route::post('/tickets/register/{key}','TicketsController@update');
 // Admin index
 Route::get('/admin', 'EventsController@index')->middleware('auth');
 
+// Get shopify products
 //Ajax request to handle post info sent from admin page.
 Route::post('/admin/event', 'TransactionsController@catchEvents')->middleware('auth');
 

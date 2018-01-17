@@ -11,25 +11,25 @@ class TransactionsController extends Controller
     public function catchPostfromShoppify(){
     //Catch Request
 		$request = Request();
-		
+
     $payload = $request->all();
-	
+
     $payload_string = json_encode($payload);
-	
+
     $payload_object = json_decode($payload_string);
-	
-//Sending Object to 
+
+//Sending Object to
     if(OrdersController::isLiveEventorder($payload_object)){
-		
-		//returning bool should be returning object. 
-	  //This was because it was checking for duplicate 
-	 //Shopify orders 
+
+		//returning bool should be returning object.
+	  //This was because it was checking for duplicate
+	 //Shopify orders
 	  $order_object = OrdersController::createNewOrder($payload_object);
       if(!$order_object){
 		// Order has been processed before
 		  return 'Thank you';
 		  }
-	  
+
 	  TicketsController::create();
        //// Send Email to Order-er
      $a =  EmailController::send($order_object);
@@ -52,15 +52,20 @@ try {
     $payload = urldecode($DirtyPayload);
     $x = explode( '&' , $payload);
     $allClasses = [];
-    foreach ($x as $class) {
-    $xl = explode( '=' , $class);
-    $allClasses[$xl[0]]=$xl[1];
-  }
-   TransactionsController::saveEvents($allClasses);
+        foreach ($x as $class) {
+        $xl = explode( '=' , $class);
+        $allClasses[$xl[0]]=$xl[1];
+      }
+   static::saveEvents($allClasses);
+
+   return "Items loaded sucessfully | Refresh page.";
 
 } catch (Exception $e) {
-return$e;
-}
+    //return $e;
+
+    \Bugsnag::notifyError('Error getting Shopify products', $e);
+    return "Request resulted in error";
+    }
 }
 
 

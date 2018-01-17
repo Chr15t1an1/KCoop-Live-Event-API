@@ -47,7 +47,6 @@ class OrdersController extends Controller
 
         // Check if order exists in DB
       if (Order::where('shopify_order_id', '=', $x->id)->exists()) {
-
 	  //Cutting off check
 	  return false; // should log
       }
@@ -119,15 +118,19 @@ class OrdersController extends Controller
 
 
       # Remove send Email functionality for /admin "Refresh all orders"
-    if(is_object($order_object)){
-		EmailController::send($order_object);
-		}
+    // if(is_object($order_object)){
+		// EmailController::send($order_object);
+		// }
       }
     }
 
 //Get all Orders from shopify
     public function GetallOrders()
     {
+      try {
+
+
+
       // ///Get totlal number of orders.
       $url = "https://8f2ad2acc06a59b6c9cb500028ff58bb:3c620d20a60aa74839f265d8ba6286f4@knowledgecoop-2.myshopify.com";
       $cmd = '/admin/orders/count.json';
@@ -138,13 +141,13 @@ class OrdersController extends Controller
       $num_of_pages= ceil($count/50);
       $page = 1;
       $cmd = '/admin/orders.json';
-      for ($i=0; $i <=$num_of_pages ; $i++) {
-        $filename = "orders/".$page."-all-orders.txt";
-        $a = '?limit=50=&page='.$page;
-        $page = $page+1;
-        $content = file_get_contents($url.$cmd.$a);
-        File::put($filename,$content);
-	  }
+            for ($i=0; $i <=$num_of_pages ; $i++) {
+              $filename = "orders/".$page."-all-orders.txt";
+              $a = '?limit=50=&page='.$page;
+              $page = $page+1;
+              $content = file_get_contents($url.$cmd.$a);
+              File::put($filename,$content);
+      	  }
 
       //ProcessArchive files
       $dir    = 'orders/';
@@ -159,6 +162,13 @@ class OrdersController extends Controller
       }
       //Create tickets!!!!!!
       TicketsController::create();
+
+      return "Orders received and processed.";
+
+    } catch (\Exception $e) {
+      	\Bugsnag::notifyError('issue processing orders', $e);
+      return "Error with getting processing/orders";
+    }
 
     }
 
