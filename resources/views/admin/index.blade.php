@@ -26,13 +26,18 @@
     <script>
 
 
+    // public/js/config.js
+    $(function () {
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') }
+        });
+    });
 
-
-    $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
+//     $.ajaxSetup({
+//     headers: {
+//         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//     }
+// });
 
 
     //Shoppify client
@@ -61,7 +66,7 @@
       function GetallOrders() {
         // Fetch All Live courses and send data to file to be saved
             $.post( "/admin/event/get-events");
-      
+
         }
 
 

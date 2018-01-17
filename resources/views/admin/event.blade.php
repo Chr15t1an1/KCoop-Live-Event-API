@@ -13,6 +13,10 @@ td {
 
 <div class="container">
 
+
+
+
+
 <h1>{{$eventName}}</h1>
 <script>
 //This JS shows one resend email option per order
@@ -33,19 +37,19 @@ $().ready(function(){
 	  //console.log(index);
 	  var orderId = index;
 	  var frequ = value;
-	  
-	  var count = 0; 
-	  
-	  $('.'+orderId).each(function(index, value ) { 
+
+	  var count = 0;
+
+	  $('.'+orderId).each(function(index, value ) {
 			count = count+1;
 		  if(count != frequ) {
 				$(this).fadeOut("fast", function(){
 					   $(this).replaceWith("Order ID: "+orderId);
 					});
-				
+
 			}
 		});
-	  
+
 	});
 
 });
@@ -86,20 +90,20 @@ $().ready(function(){
 				Last Name
 			</th>
 			<th>
-				NMLS ID 
+				NMLS ID
 			</th>
             <th>
-				Email 
+				Email
 			</th>
             <th>
-				Company 
+				Company
 			</th>
             <th>
-				Resend Email 
+				Resend Email
 			</th>
-            
+
             <th>
-				Edit Order 
+				Edit Order
 			</th>
 
 		</tr>
@@ -112,22 +116,22 @@ $().ready(function(){
   <td>
     <a href="https://knowledgecoop-2.myshopify.com/admin/products/{{$ticket->event_id}}"><button class="btn">{{$eventTag}}</button></a>
   </td>
-  
-  
-  
+
+
+
   <td>
     <a href="/admin/tickets/redirect/{{$ticket->order_id}}"><button class="btn btn-success">Shopify Order</button></a>
   </td>
-  
-  
+
+
   <td>
-    
+
     @if($ticket->is_claimed > 0)
     <span style="background-color:#2e6da4;" class="badge">Yes</span>
     @else
     <span style="background-color:#d9534f;" class="badge">No</span>
     @endif
-    
+
   </td>
   <td>
     {{$ticket->dietary_restrictions}}
@@ -147,7 +151,7 @@ $().ready(function(){
    <td>
     {{$ticket->company}}
   </td>
-  
+
    @if($ticket->is_claimed > 0)
   <td>
     <i style="font-size: 30px;" class="fa fa-check-square" aria-hidden="true"></i>
@@ -156,13 +160,13 @@ $().ready(function(){
    <td class ="">
     <button onClick="emailReminder({{$ticket->order_id}})" class="btn btn-block btn-primary {{$ticket->order_id}}"><i class="fa fa-envelope" aria-hidden="true"></i> Order {{$ticket->order_id}}
 </button>
- 	</td> 
+ 	</td>
     @endif
-    
+
   <td>
     <a href="/admin/tickets/register/{{$ticket->order_id}}"><button class="btn btn-danger btn-block"><i style="color:#FFF;" class="fa fa-pencil" aria-hidden="true"></i></button></a>
   </td>
-  
+
 </tr>
 
 @endforeach
@@ -170,7 +174,7 @@ $().ready(function(){
 </tbody>
 </table>
 <hr/>
-<?php 
+<?php
 print "Total count: ".$count;
 ?>
 
@@ -178,12 +182,19 @@ print "Total count: ".$count;
 <script>
 
 function emailReminder(orderId) {
-	
+
         // Fetch All Live courses and send data to file to be saved
-            $.post( "/admin/email/send-reminder/"+orderId);
-      
+            //$.post( "/admin/email/send-reminder/"+orderId);
+
+            $.post( "/admin/email/send-reminder/"+orderId, function(data) {
+                   alert( data );
+                });
+
+
         }
-		
+
+
+
 
 
 </script>

@@ -21,6 +21,8 @@ class EmailController extends Controller
    }
    //
 	   $orderObject = $order_object;
+
+
 	  if(empty($orderObject->first_name)){
             $name = "There";
       }else {
@@ -33,13 +35,24 @@ class EmailController extends Controller
 
 	   $data = array('name' => $name, 'key' => $key, 'email'=> $email,);
 
-       Mail::send('emails.send',$data, function ($message) use ($email)
-       {
-           $message->from('info@knowledgecoop.com', 'Knowledge Coop');
-           $message->to($email);
-		   $subject = "Please complete registration";
-		   $message->subject($subject);
-       });
+// If there is an error sending the message send me an email with shopify order id
+          try {
+            Mail::send('emails.send',$data, function ($message) use ($email)
+            {
+                $message->from('info@knowledgecoop.com', 'Knowledge Coop');
+                $message->to($email);
+            $subject = "Please complete registration";
+            $message->subject($subject);
+            });
+          } catch (\Exception $e) {
+
+
+            	\Bugsnag::notifyError('issue.sending.email', $e);
+
+              static::notify_admin_baduser_data($orderObject->shopify_order_id);
+          }
+
+
 
        return response()->json(['message' => 'Request completed']);
    }
@@ -91,14 +104,6 @@ class EmailController extends Controller
 
 
 
-
-
-
-
-
-
-
-
 		}
 
 
@@ -118,13 +123,9 @@ class EmailController extends Controller
 
 public static function ManualSend($orderId)
    {
-
 	   //return $orderId;
  $orderObject = \App\Order::find($orderId);
-
 	  //return $orderObject;
-
-
 	 // $orderObject = $order_object;
 	  if(empty($orderObject->first_name)){
             $name = "There";
@@ -133,47 +134,76 @@ public static function ManualSend($orderId)
       }
       $key = $orderObject->secret_key;
 
-
-
-
-	 $email = $orderObject->email;
+	     $email = $orderObject->email;
 
 
 	   $data = array('name' => $name, 'key' => $key, 'email'=> $email,);
+      // Respond to ajax request with message. Log errors. 
+          try {
 
-       Mail::send('emails.send',$data, function ($message) use ($email)
-       {
-           $message->from('info@knowledgecoop.com', 'Knowledge Coop');
-           $message->to($email);
-		   //$message->to('ccampbell@sapphirebd.com');
-		   $subject = "Please complete registration";
-		   $message->subject($subject);
-       });
+            Mail::send('emails.send',$data, function ($message) use ($email)
+            {
+                $message->from('info@knowledgecoop.com', 'Knowledge Coop');
+                $message->to($email);
+            //$message->to('ccampbell@sapphirebd.com');
+            $subject = "Please complete registration";
+            $message->subject($subject);
+            });
+
+            //return response()->json(['message' => 'Request completed']);
+              return "Email Sent";
 
 
+          } catch (\Exception $e) {
+
+            // \Bugsnag::notifyError('issue.sending.email', $e);
+          //  \Bugsnag::leaveBreadcrumb('Something happened!');
+          \Bugsnag::notifyError('Email Error', 'Manual send not working Email Controller line 159');
+
+            static::notify_admin_baduser_data($orderObject->shopify_order_id);
+
+            return "Request resulted in error";
+
+            //response()->json(['message' => 'Request resulted in error']);
+          }
 
 
-       return response()->json(['message' => 'Request completed']);
    }
 
 
 
+//
+// public static function TestSend(){
+//
+// $data = array();
+//
+//   Mail::send('emails.test',$data, function ($message)
+//   {
+//     $message->from('info@knowledgecoop.com', 'Knowledge Coop');
+//     //$message->to($email);
+//   $message->to('ccampbell@sapphirebd.com');
+//   $subject = "Please complete registration";
+//   $message->subject($subject);
+//   });
+//
+// }
 
-public static function TestSend(){
 
-$data = array();
+// Notify me if order is not processed correctly
+public static function notify_admin_baduser_data($shopifyOrderId){
 
-  Mail::send('emails.test',$data, function ($message)
+$data = array('orderId' => $shopifyOrderId,);
+
+  Mail::send('emails.notify_admin',$data, function ($message)
   {
     $message->from('info@knowledgecoop.com', 'Knowledge Coop');
     //$message->to($email);
-  $message->to('ccampbell@sapphirebd.com');
-  $subject = "Please complete registration";
+  $message->to('christian@knowledgecoop.com');
+  $subject = "! Yo issue with - Please complete registration";
   $message->subject($subject);
   });
 
 }
-
 
 
 
