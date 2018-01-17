@@ -10,7 +10,7 @@ use App\Order;
 
 class OrdersController extends Controller
 {
-    
+
 //Checks if an order contains a live event
     public static function isLiveEventorder($singleOrderObject)
     {
@@ -32,22 +32,22 @@ class OrdersController extends Controller
 
     }
 }
-   
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-	 
+
 	 //Creates new order
     public static function createNewOrder($singleOrderObject)
     {
       $x = $singleOrderObject;
-	  
-	  
+
+
         // Check if order exists in DB
       if (Order::where('shopify_order_id', '=', $x->id)->exists()) {
-      
+
 	  //Cutting off check
 	  return false; // should log
       }
@@ -116,7 +116,10 @@ class OrdersController extends Controller
       // //Create orders
       foreach ($qualified_purchases as $key => $single_qualified_purchases) {
        $order_object = static::createNewOrder($single_qualified_purchases);
-		if(is_object($order_object)){
+
+
+      # Remove send Email functionality for /admin "Refresh all orders"
+    if(is_object($order_object)){
 		EmailController::send($order_object);
 		}
       }
@@ -124,7 +127,7 @@ class OrdersController extends Controller
 
 //Get all Orders from shopify
     public function GetallOrders()
-    {    
+    {
       // ///Get totlal number of orders.
       $url = "https://8f2ad2acc06a59b6c9cb500028ff58bb:3c620d20a60aa74839f265d8ba6286f4@knowledgecoop-2.myshopify.com";
       $cmd = '/admin/orders/count.json';
@@ -146,7 +149,7 @@ class OrdersController extends Controller
       //ProcessArchive files
       $dir    = 'orders/';
       $files1 = scandir($dir);
-	 
+
       foreach ($files1 as $file) {
         // print_r($file."<hr/>");
         if(strlen($file)<=2){

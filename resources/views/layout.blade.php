@@ -316,6 +316,8 @@ form.hs-form-233559f8-5c50-4329-abaa-854d89171972_119af957-fb00-4065-9ad5-0a01f4
 }
 form.hs-form-233559f8-5c50-4329-abaa-854d89171972_119af957-fb00-4065-9ad5-0a01f474ca88 .form-columns-2 .hs-form-field .hs-input, form.hs-form-233559f8-5c50-4329-abaa-854d89171972_119af957-fb00-4065-9ad5-0a01f474ca88 .form-columns-3 .hs-form-field .hs-input {
 	width: 95%
+}
+}
 
 </style>
 <style type="text/css">
@@ -343,9 +345,9 @@ form.hs-form-233559f8-5c50-4329-abaa-854d89171972_119af957-fb00-4065-9ad5-0a01f4
   </div>
   <!-- begin mobile-nav -->
   <ul class="mobile-nav">
-    <li class="mobile-nav__item mobile-nav__search"> 
+    <li class="mobile-nav__item mobile-nav__search">
       <!-- /snippets/search-bar.liquid -->
-      
+
       <form action="/search" method="get" class="input-group search-bar" role="search">
         <input type="search" name="q" value="" placeholder="Search our store" class="input-group-field" aria-label="Search our store">
         <span class="input-group-btn">
@@ -383,7 +385,7 @@ form.hs-form-233559f8-5c50-4329-abaa-854d89171972_119af957-fb00-4065-9ad5-0a01f4
     <li class="mobile-nav__item"> <a href="/account">Logged in as Christian</a> </li>
     <li class="mobile-nav__item"> <a href="/account/logout" id="customer_logout_link">Log out</a> </li>
   </ul>
-  <!-- //mobile-nav --> 
+  <!-- //mobile-nav -->
 </div>
 <div id="CartDrawer" class="drawer drawer--right">
   <div class="drawer__header">
@@ -414,8 +416,8 @@ form.hs-form-233559f8-5c50-4329-abaa-854d89171972_119af957-fb00-4065-9ad5-0a01f4
               <li> <a href="https://www.linkedin.com/company/the-knowledge-coop" target="_blank"> <i class="fa fa-linkedin"></i> </a> </li>
             </ul>
             </div>
-          <div class="main-nav"> 
-            
+          <div class="main-nav">
+
             <!-- begin site-nav -->
             <ul class="site-nav" id="AccessibleNav">
               <li class="site-nav--has-dropdown" aria-haspopup="true"> <a href="/pages/mortgage-continuing-education" class="site-nav__link"> CE <span class="icon icon-arrow-down" aria-hidden="true"></span> </a>
@@ -439,32 +441,32 @@ form.hs-form-233559f8-5c50-4329-abaa-854d89171972_119af957-fb00-4065-9ad5-0a01f4
       </div>
     </div>
   </header>
-  
-  
-  
-  
-  <main class="main-content" role="main"> 
-    
-    
+
+
+
+
+  <main class="main-content" role="main">
+
+
     @yield('content')
 
   </main>
-  
+
   <!-- begin site-footer -->
   <footer class="site-footer" role="contentinfo">
-   
-        
-      
-    
+
+
+
+
     <!-- footer copyrights -->
     <div class="footer-legal"> <span>Copyright 2008 - 2016</span> <a href="https://www.knowledgecoop.com">www.knowledgecoop.com</a> <a href="/pages/legal-stuff">Legal Stuff</a> <a> NMLS Course Provider #1400023</a> </div>
   </footer>
-  <!-- //site-footer --> 
+  <!-- //site-footer -->
 </div>
 
-<!-- /snippets/ajax-cart-template.liquid --> 
+<!-- /snippets/ajax-cart-template.liquid -->
 
-<!-- Start of Async HubSpot Analytics Code --> 
+<!-- Start of Async HubSpot Analytics Code -->
 
 </body>
 </html>

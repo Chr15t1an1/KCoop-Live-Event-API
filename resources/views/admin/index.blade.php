@@ -26,7 +26,12 @@
     <script>
 
 
-
+    // public/js/config.js
+    // $(function () {
+    //     $.ajaxSetup({
+    //         headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') }
+    //     });
+    // });
 
     $.ajaxSetup({
     headers: {
@@ -61,7 +66,7 @@
       function GetallOrders() {
         // Fetch All Live courses and send data to file to be saved
             $.post( "/admin/event/get-events");
-      
+
         }
 
 

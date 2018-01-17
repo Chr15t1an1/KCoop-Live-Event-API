@@ -20,5 +20,6 @@ Homestead.json
 .rocketeer/
 
 
-
-public/orders/
+# Want to keep orders dir without any files.
+public/orders/*
+!public/orders/.g

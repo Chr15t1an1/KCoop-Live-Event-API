@@ -42,21 +42,36 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
- 
+
    public function render($request, Exception $e)
     {
   //      //check if exception is an instance of ModelNotFoundException.
   //      //or NotFoundHttpException
         if ($e instanceof \Symfony\Component\HttpKernel\Exception\ModelNotFoundException or $e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-  //          // ajax 404 json feedback
+           // ajax 404 json feedback
+            \Bugsnag::notifyError('404', $e);
             if ($request->ajax()) {
                 return response()->json(['error' => 'Not Found'], 404);
             }
-  
-  //          // normal 404 view page feedback
+          // normal 404 view page feedback
             return response()->view('errors.missing', [], 404);
        }
-  
+
+///Looking to Catch token Mismatch.
+       if ($e instanceof \Illuminate\Session\TokenMismatchException) {
+                   // ajax 404 json feedback
+          \Bugsnag::notifyError('tokenMismatch', $e);
+           if ($request->ajax()) {
+               return response()->json(['error' => 'Not Found'], 500);
+           }
+ //          // normal 404 view page feedback
+           return response()->view('errors.issue', [], 500);
+      }
+
+
+
+
+
         return parent::render($request, $e);
     }
 
