@@ -15,7 +15,7 @@ class TicketsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-	 
+
 	 //Create tockets for all orders that have not been created
     public static function create()
     {
@@ -42,7 +42,7 @@ class TicketsController extends Controller
         }
     }
 
-  
+
 
     /**
      * Display the specified resource.
@@ -53,7 +53,8 @@ class TicketsController extends Controller
 	// Show tickets for an Order
     public function show($key)
     {
-        $order = Order::with('tickets')->where('secret_key', '=', $key)->get();	
+
+		$order = Order::with('tickets')->where('secret_key', '=', $key)->get();
 		$itemCount = $order->count();
 		if($itemCount < 1){
 			return response()->view('errors.missing', [], 404);
@@ -62,22 +63,22 @@ class TicketsController extends Controller
 		return view('public.ticket',compact('tickets'));
 				}
     }
-	
-	
-	
-	
+
+
+
+
 	// Show tickets for an Order
     public function adminShow($orderId)
     {
 		$orderObject = Order::with('tickets')->find($orderId);
-		
-		$tickets = $orderObject->tickets;	
-		return view('admin.adminTicket',compact('tickets'));
-		
-    }
-	
 
-  
+		$tickets = $orderObject->tickets;
+		return view('admin.adminTicket',compact('tickets'));
+
+    }
+
+
+
 
     /**
      * Update the specified resource in storage.
@@ -86,16 +87,16 @@ class TicketsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-	 
+
 	 //Update order with ticket info
-	 
+
     public function update(Request $request, $key)
     {
       //Get order and tickets
-      $order = Order::with('tickets')->where('secret_key', '=', $key)->get();  	
+      $order = Order::with('tickets')->where('secret_key', '=', $key)->get();
       	//Isolate tickets
 		$tickets = $order[0]->tickets;
-		
+
 		//Filter out claimed tickets
 		$tickets_notClaimed = array();
 		foreach($tickets as $ticket){
@@ -104,28 +105,28 @@ class TicketsController extends Controller
 				}
 			$tickets_notClaimed[] = $ticket;
 			}
-		
-		
+
+
 		$tickets = $tickets_notClaimed;
-	
+
       	//Capture post data
         $postdatas = $request->all();
         //Separate the post array into tickets
         $ticket_data = array();
-		
+
         foreach ($postdatas as $key => $postdata ) {
           $ticket_id = preg_replace("/[^0-9,.]/", "", $key);
           $ticket_data[$ticket_id][$key] =  $postdata;
         }
-		
+
 		?><pre style="display:none"> <?php ?> </pre><?php
-		
-		
+
+
         foreach ($tickets as $k => $ticket) {
-          $ticket_object_id = $ticket->id; 
-		 
+          $ticket_object_id = $ticket->id;
+
           $post_data_array = $ticket_data[$ticket_object_id];
-		  
+
 		  //Validation
 		   $this->validate($request, [
         'firstname-'.$ticket_object_id => 'required',
@@ -141,8 +142,8 @@ class TicketsController extends Controller
 		   //New Inputs
 		   $ticket->email = $post_data_array['email-'.$ticket_object_id];
            $ticket->company = $post_data_array['company-'.$ticket_object_id];
-		   
-		   
+
+
            $ticket->is_claimed = 1;
            $ticket->save();
 
@@ -159,14 +160,14 @@ class TicketsController extends Controller
 
 
 public function adminUpdate(Request $request, $orderId)
-    {	
+    {
 		$orderObject = Order::with('tickets')->find($orderId);
-		$tickets = $orderObject->tickets;	
-			
-			
-		//return $orderObject;	
-			
-			
+		$tickets = $orderObject->tickets;
+
+
+		//return $orderObject;
+
+
 		/*//Filter out claimed tickets
 		$tickets_notClaimed = array();
 		foreach($tickets as $ticket){
@@ -176,30 +177,30 @@ public function adminUpdate(Request $request, $orderId)
 			$tickets_notClaimed[] = $ticket;
 			}
 		*/
-		
+
 		//$tickets = $tickets_notClaimed;
-	
+
       	//Capture post data
         $postdatas = $request->all();
-		
+
 		//return $postdatas;
-		
+
         //Separate the post array into tickets
         $ticket_data = array();
-		
+
         foreach ($postdatas as $key => $postdata ) {
           $ticket_id = preg_replace("/[^0-9,.]/", "", $key);
           $ticket_data[$ticket_id][$key] =  $postdata;
         }
-		
+
 		?><pre style="display:none"> <?php ?> </pre><?php
-		
-		
+
+
         foreach ($tickets as $k => $ticket) {
-          $ticket_object_id = $ticket->id; 
-		 
+          $ticket_object_id = $ticket->id;
+
           $post_data_array = $ticket_data[$ticket_object_id];
-		  
+
 		  //Validation
 		   $this->validate($request, [
         'firstname-'.$ticket_object_id => 'required',
@@ -215,8 +216,8 @@ public function adminUpdate(Request $request, $orderId)
 		   //New Inputs
 		   $ticket->email = $post_data_array['email-'.$ticket_object_id];
            $ticket->company = $post_data_array['company-'.$ticket_object_id];
-		   
-		   
+
+
            $ticket->is_claimed = 1;
            $ticket->save();
 
@@ -236,8 +237,8 @@ public function adminUpdate(Request $request, $orderId)
 public function adminGoToOrder($orderId){
 		$orderObject = Order::find($orderId);
 		$order_id = $orderObject->shopify_order_id;
-		$baseUrl = 'https://knowledgecoop-2.myshopify.com/admin/orders/';	
+		$baseUrl = 'https://knowledgecoop-2.myshopify.com/admin/orders/';
 		header('Location:'.$baseUrl.$order_id);
 	}
-    
+
 }
