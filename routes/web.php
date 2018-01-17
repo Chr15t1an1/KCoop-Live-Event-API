@@ -10,16 +10,16 @@
 
 
 #// Consumer facing
-//Redirects to live CE page
-// Route::get('/', function () {
-// 	//Bugsnag::notifyError('ErrorType', 'Test Error');
-//     // Validate the request...
-//     //return redirect()->;
-// 	return redirect('https://www.knowledgecoop.com/pages/live-ce');
-//
-// });
+// Redirects to live CE page
+Route::get('/', function () {
+	//Bugsnag::notifyError('ErrorType', 'Test Error');
+    // Validate the request...
+    //return redirect()->;
+	return redirect('https://www.knowledgecoop.com/pages/live-ce');
 
-Route::get('/','EmailController@TestSend');
+});
+
+// Route::get('/','EmailController@TestSend');
 
 
 
