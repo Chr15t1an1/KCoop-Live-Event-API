@@ -235,10 +235,11 @@ public function adminUpdate(Request $request, $orderId)
 
 //adminGoToOrder
 public function adminGoToOrder($orderId){
+
 		$orderObject = Order::find($orderId);
 		$order_id = $orderObject->shopify_order_id;
 		$baseUrl = 'https://knowledgecoop-2.myshopify.com/admin/orders/';
-		header('Location:'.$baseUrl.$order_id);
+		return redirect($baseUrl.$order_id);
 	}
 
 }
