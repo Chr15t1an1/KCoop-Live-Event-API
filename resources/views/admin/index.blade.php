@@ -5,6 +5,7 @@
 
   <button onclick="getShopProducts()" class="btn btn-lg">Check for Live Events</button>
   <button onclick="GetallOrders()" class="btn btn-lg">Refresh All orders</button>
+  <button onclick="archiveAllOldOrders()" class="btn btn-lg">Archive orders from past years</button>
 
 
 <hr/>
@@ -79,6 +80,15 @@
                 });
 
         }
+
+
+        function archiveAllOldOrders() {
+              $.post( "/admin/order/archive-all/old", function(data) {
+                     alert( data );
+                  });
+          }
+
+
 
 
     </script>

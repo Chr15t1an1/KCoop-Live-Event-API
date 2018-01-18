@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use File;
 use Hash;
@@ -10,6 +11,106 @@ use App\Order;
 
 class OrdersController extends Controller
 {
+
+
+
+public static function archiveAllOlderOrderandTickets()
+  {
+
+// $check = array();
+try {
+// get all orders that are not currently archived.
+// $allOrders = Order::all();
+$allOrders = Order::whereNull('is_archived')->get();
+
+// Loop through each order Object
+    foreach ($allOrders as $order) {
+
+      // get shopify order object
+      $shopify_order_object = unserialize($order->order_object);
+      // Get year of purchase
+      $shopify_order_created_at_timestamp = $shopify_order_object->created_at;
+      $timestamp_obj = new Carbon( $shopify_order_created_at_timestamp );
+      $year = $timestamp_obj->year;
+
+    // If year is not this year archive
+      if ($year < 2018) {
+          static::archiveOrderandTickets($order->id);
+      }
+    }
+
+
+    return "Archived all past years orders.";
+
+  } catch (\Exception $e) {
+    \Bugsnag::notifyError('issue archiveAllOlderOrderandTickets', $e);
+    return "Issue archiving all past years orders.";
+  }
+
+  }
+
+
+
+public static function archiveOrderandTickets($orderID)
+{
+
+try {
+  // Get all orders tickets
+  $order = Order::with('tickets')->where('id', '=', $orderID)->first();
+
+  // Mark order as archived
+  $tickets = $order->tickets;
+  $order->is_archived = 1;
+  $order->save();
+
+  // Mark tickets as archived
+  foreach ($tickets as $ticket) {
+    $ticket->is_archived = 1;
+    $ticket->save();
+  }
+
+  return "Order and tickets archived";
+
+} catch (\Exception $e) {
+  \Bugsnag::notifyError('issue with archiveOrderandTickets Order ID - '.$orderID, $e);
+  return "Issue with archiving order and tickets ".$orderID;
+}
+
+
+}
+
+
+
+public static function unArchiveOrderandTickets($orderID)
+{
+
+try {
+  // Get all orders tickets
+  $order = Order::with('tickets')->where('id', '=', $orderID)->first();
+
+  // Mark order as archived
+  $tickets = $order->tickets;
+  $order->is_archived = NULL;
+  $order->save();
+
+  // Mark tickets as archived
+  foreach ($tickets as $ticket) {
+    $ticket->is_archived = NULL;
+    $ticket->save();
+  }
+
+  return "Order and tickets unarchived";
+
+} catch (\Exception $e) {
+  \Bugsnag::notifyError('issue.UNarchiving Order and tickets', $e);
+  return "Issue with archiving Order and tickets";
+}
+
+
+}
+
+
+
 
 //Checks if an order contains a live event
     public static function isLiveEventorder($singleOrderObject)

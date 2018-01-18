@@ -47,7 +47,7 @@ class Handler extends ExceptionHandler
     {
   //      //check if exception is an instance of ModelNotFoundException.
   //      //or NotFoundHttpException
-        if ($e instanceof \Symfony\Component\HttpKernel\Exception\ModelNotFoundException or $e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+        if ($e instanceof \Symfony\Component\HttpKernel\Exception\ModelNotFoundException or $e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ) {
            // ajax 404 json feedback
             \Bugsnag::notifyError('404', $e);
             if ($request->ajax()) {
@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
        }
 
 ///Looking to Catch token Mismatch.
-       if ($e instanceof \Illuminate\Session\TokenMismatchException) {
+       if ($e instanceof \Illuminate\Session\TokenMismatchException or $e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException ) {
                    // ajax 404 json feedback
           \Bugsnag::notifyError('tokenMismatch', $e);
            if ($request->ajax()) {

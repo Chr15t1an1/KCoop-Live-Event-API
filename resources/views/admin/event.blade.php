@@ -59,7 +59,7 @@ $().ready(function(){
 
 <a href="/admin"><button class="btn btn-success">
  <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
- Back to events
+ Back to all events
 </button></a>
 
 <a href="/admin/export/csv/{{$eventId}}"><button class="btn btn-primary">
@@ -68,11 +68,27 @@ $().ready(function(){
 </button></a>
 <hr/>
 
+<a href="https://knowledgecoop-2.myshopify.com/admin/products/{{$eventId}}" target="_blank"><button class="btn btn-primary">
+<i class="fa fa-tag" aria-hidden="true"></i>
+ View Shopify Product
+</button></a>
+
+<a href="/admin/event/with-archived/{{$eventId}}"><button class="btn btn-info">
+  <i class="fa fa-cogs" aria-hidden="true"></i>
+ View Archived Orders.
+</button></a>
+
+<a href="/admin/event/{{$eventId}}"><button class="btn btn-success">
+  <i class="fa fa-cogs" aria-hidden="true"></i>
+ View without archived Orders.
+</button></a>
+
+<hr/>
 <table id="myTable" class="table table-bordered table-striped table-hover table-condensed table-responsive">
 	<thead>
 		<tr>
 			<th>
-				Live Event
+        Archive Order
 			</th>
             <th>
 				Shopify Order
@@ -112,9 +128,25 @@ $().ready(function(){
 <?php $count = 0; ?>
 @foreach ($tickets as $ticket)
 <?php $count = $count+1; ?>
-<tr>
+
+
+    @if($ticket->is_archived != 1)
+    <tr>
+    @else
+    <tr style="background-color: #8080807a;">
+    @endif
+
+
   <td>
-    <a href="https://knowledgecoop-2.myshopify.com/admin/products/{{$ticket->event_id}}"><button class="btn">{{$eventTag}}</button></a>
+
+    @if($ticket->is_archived != 1)
+    <button onClick="archiveOrder({{$ticket->order_id}})" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
+    @else
+  <button onClick="unarchiveOrder({{$ticket->order_id}})" class="btn btn-primary"><i class="fa fa-recycle" aria-hidden="true"></i></button>
+    @endif
+
+
+
   </td>
 
 
@@ -185,13 +217,30 @@ function emailReminder(orderId) {
 
         // Fetch All Live courses and send data to file to be saved
             //$.post( "/admin/email/send-reminder/"+orderId);
-
             $.post( "/admin/email/send-reminder/"+orderId, function(data) {
                    alert( data );
                 });
-
-
         }
+
+
+  function archiveOrder(orderId) {
+
+    if (confirm('Are you sure you want to archive all tickets in this order')) {
+      $.post( "/admin/order/archive/"+orderId, function(data) {
+             alert( data );
+          });
+      }
+  }
+
+
+  function unarchiveOrder(orderId) {
+
+    if (confirm('Are you sure you want to unarchive all tickets in this order')) {
+      $.post( "/admin/order/unarchive/"+orderId, function(data) {
+             alert( data );
+          });
+      }
+  }
 
 
 

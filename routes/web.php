@@ -19,10 +19,6 @@ Route::get('/', function () {
 
 });
 
-// Route::get('/','EmailController@TestSend');
-
-
-
 
 
 //Show all tickets for an order
@@ -42,8 +38,13 @@ Route::post('/admin/event', 'TransactionsController@catchEvents')->middleware('a
 Route::post('/admin/event/get-events', 'OrdersController@GetallOrders')->middleware('auth');
 
 
-//Show all tickets for an order
+//Show all un-Archived tickets for an order
 Route::get('/admin/event/{product_id}', 'EventsController@show')->middleware('auth');
+
+//Show all tickets for an order including Archived
+Route::get('/admin/event/with-archived/{product_id}', 'EventsController@showWarchived')->middleware('auth');
+
+
 
 
 
@@ -63,9 +64,25 @@ Route::post('/admin/tickets/register/{orderId}', 'TicketsController@adminUpdate'
 
 
 
+/******/
+###Archive Orders
+#Un-Archive individual order.
+Route::post('/admin/order/unarchive/{ticketId}', 'OrdersController@unArchiveOrderandTickets')->middleware('auth');
+
+
+#Archive individual order.
+Route::post('/admin/order/archive/{orderId}', 'OrdersController@archiveOrderandTickets')->middleware('auth');
+
+
+#Archive all old orders.
+Route::post('/admin/order/archive-all/old', 'OrdersController@archiveAllOlderOrderandTickets')->middleware('auth');
+/******/
+
+
+
 ////Send Email
 Route::post('/admin/email/send-reminder/{id}', 'EmailController@ManualSend')->middleware('auth');
-//Route::get('/admin/email/send-reminder/{id}', 'EmailController@ManualSend')->middleware('auth');
+
 
 
 

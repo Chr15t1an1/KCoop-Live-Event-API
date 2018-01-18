@@ -138,7 +138,7 @@ public static function ManualSend($orderId)
 
 
 	   $data = array('name' => $name, 'key' => $key, 'email'=> $email,);
-      // Respond to ajax request with message. Log errors. 
+      // Respond to ajax request with message. Log errors.
           try {
 
             Mail::send('emails.send',$data, function ($message) use ($email)
