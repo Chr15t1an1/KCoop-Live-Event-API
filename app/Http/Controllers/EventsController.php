@@ -151,16 +151,23 @@ class EventsController extends Controller
 
     $handle = fopen($filename, 'w+');
 
-	fputcsv($handle, array('First Name', 'Last Name', 'NMLS ID', 'Is claimed','Dietary Restrictions','email','company'));
+	fputcsv($handle, array('First Name', 'Last Name', 'NMLS ID', 'Is claimed','Dietary Restrictions','email','company','Archived'));
 
     foreach($tickets as $ticket) {
 		if($ticket->is_claimed > 0){
 			$is_claimed ="Yes";
 			}else{
 				$is_claimed ="No";
-				}
+			}
 
-        fputcsv($handle, array($ticket->FN, $ticket->LN, $ticket->NMLS_id,$is_claimed,$ticket->dietary_restrictions,$ticket->email,$ticket->company));
+      if($ticket->is_archived == 1){
+        $archived = "Archived";
+      }else {
+        $archived = "";
+      }
+
+
+        fputcsv($handle, array($ticket->FN, $ticket->LN, $ticket->NMLS_id,$is_claimed,$ticket->dietary_restrictions,$ticket->email,$ticket->company,$archived));
     }
 
     fclose($handle);
