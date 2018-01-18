@@ -19,7 +19,7 @@
                   <td class="m_-2883201427003282024shop-name__cell" style="font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,&quot;Roboto&quot;,&quot;Oxygen&quot;,&quot;Ubuntu&quot;,&quot;Cantarell&quot;,&quot;Fira Sans&quot;,&quot;Droid Sans&quot;,&quot;Helvetica Neue&quot;,sans-serif">
 
                       <h1 class="m_-2883201427003282024shop-name__text" style="font-weight:normal;font-size:30px;color:#333;margin:0">
-                        <a href="" style="font-size:30px;color:#333;text-decoration:none" target="_blank" data-saferedirecturl="">Hi {{$name}},</a>
+                        <a href="" style="font-size:30px;color:#333;text-decoration:none" target="_blank" data-saferedirecturl="">Hi {{$name}}</a>
                       </h1>
 
                   </td>
@@ -49,18 +49,11 @@
           <tbody><tr>
             <td style="font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,&quot;Roboto&quot;,&quot;Oxygen&quot;,&quot;Ubuntu&quot;,&quot;Cantarell&quot;,&quot;Fira Sans&quot;,&quot;Droid Sans&quot;,&quot;Helvetica Neue&quot;,sans-serif">
 
-            <!-- <h2 style="font-weight:normal;font-size:24px;margin:0 0 10px">Thank you for your purchase! </h2> -->
+            <h2 style="font-weight:normal;font-size:24px;margin:0 0 10px">Thank you for your purchase! </h2>
             <p style="color:#777;line-height:150%;font-size:16px;margin:0">
 
-              @if( $numberOfTickets > 1 )
-              Thank you for registering {{$numberOfTickets}} people for {{$eventName}}. We're excited to see you all there but we need a bit more information about each person to complete the sign-up process.
-              @else
-              Thank you for registering for {{$eventName}}. We're excited to see you there but we need a bit more information to complete the sign-up process.
-              @endif
- <br>
 
-
-<br> <a href="http://event.knowledgecoop.com/tickets/register/{{$key}}" style="font-size:16px;text-decoration:none;color:#1990c6" target="_blank" data-saferedirecturl=""><span style="margin-left:auto;margin-right:auto;max-width:250px;color:#fff;display:block;font-size:16px;text-decoration:none;background-color:#00b1cd;border-radius:4px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue',sans-serif;text-align:center;padding:20px 25px">Complete Registration</span></a><br>
+Finish your registration for your live event by visiting this link <br> <br> <a href="http://event.knowledgecoop.com/tickets/register/{{$key}}" style="font-size:16px;text-decoration:none;color:#1990c6" target="_blank" data-saferedirecturl=""><span style="margin-left:auto;margin-right:auto;max-width:250px;color:#fff;display:block;font-size:16px;text-decoration:none;background-color:#00b1cd;border-radius:4px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue',sans-serif;text-align:center;padding:20px 25px">Complete Registration</span></a><br>
 <br><br>
 
 
@@ -68,3 +61,5 @@ If you have any questions or need assistance please feel free to respond to this
 </p>
 
 <br><br>
+
+          

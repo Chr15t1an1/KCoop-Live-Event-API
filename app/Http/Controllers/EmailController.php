@@ -19,8 +19,20 @@ class EmailController extends Controller
     //  e-mail found
 	 return true;
    }
-   //
+
+
+
+
 	   $orderObject = $order_object;
+
+
+     $eventId = $orderObject->event_id;
+
+     $eventObject = \App\Event::where('event_id', $eventId)->first();
+
+     $eventName = $eventObject->name;
+
+     $numberOfTickets = $orderObject->num_tickets;
 
 
 	  if(empty($orderObject->first_name)){
@@ -33,7 +45,7 @@ class EmailController extends Controller
 	  $email = $order_object->email;
 
 
-	   $data = array('name' => $name, 'key' => $key, 'email'=> $email,);
+	   $data = array('name' => $name, 'key' => $key, 'email'=> $email,'numberOfTickets' => $numberOfTickets,'eventName' => $eventName,);
 
 // If there is an error sending the message send me an email with shopify order id
           try {
@@ -125,6 +137,19 @@ public static function ManualSend($orderId)
    {
 	   //return $orderId;
  $orderObject = \App\Order::find($orderId);
+
+////
+
+ $eventId = $orderObject->event_id;
+
+ $eventObject = \App\Event::where('event_id', $eventId)->first();
+
+
+ $eventName = $eventObject->name;
+////
+
+  $numberOfTickets = $orderObject->num_tickets;
+
 	  //return $orderObject;
 	 // $orderObject = $order_object;
 	  if(empty($orderObject->first_name)){
@@ -137,7 +162,7 @@ public static function ManualSend($orderId)
 	     $email = $orderObject->email;
 
 
-	   $data = array('name' => $name, 'key' => $key, 'email'=> $email,);
+	   $data = array('name' => $name, 'key' => $key, 'email'=> $email,'numberOfTickets' => $numberOfTickets,'eventName' => $eventName,);
       // Respond to ajax request with message. Log errors.
           try {
 
@@ -158,7 +183,7 @@ public static function ManualSend($orderId)
 
             // \Bugsnag::notifyError('issue.sending.email', $e);
           //  \Bugsnag::leaveBreadcrumb('Something happened!');
-          \Bugsnag::notifyError('Email Error', 'Manual send not working Email Controller line 159');
+          \Bugsnag::notifyError('Email Error', 'Manual send not working Email Controller line 159'.$e);
 
             static::notify_admin_baduser_data($orderObject->shopify_order_id);
 

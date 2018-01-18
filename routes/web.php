@@ -9,6 +9,13 @@
 */
 
 
+#Test Routes emails.
+
+Route::get('/admin/email/send-reminder/{id}', 'EmailController@ManualSend')->middleware('auth');
+## End Test Routes
+
+
+
 #// Consumer facing
 // Redirects to live CE page
 Route::get('/', function () {
@@ -79,17 +86,17 @@ Route::post('/admin/order/archive-all/old', 'OrdersController@archiveAllOlderOrd
 /******/
 
 
-
 ////Send Email
 Route::post('/admin/email/send-reminder/{id}', 'EmailController@ManualSend')->middleware('auth');
-
-
 
 
 //Route::post('/admin/export/csv/{id}', 'EventsController@exportToCsv')->middleware('auth');
 Route::get('/admin/export/csv/{id}', 'EventsController@exportToCsv')->middleware('auth');
 
+
 //Admin routes
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', function () {
+     return redirect('/admin');
+});
