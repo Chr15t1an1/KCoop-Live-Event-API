@@ -19,6 +19,9 @@ Homestead.json
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
 .rocketeer/
 
+#ignore email log
+public/emails/log.txt
+
 
 # Want to keep orders dir without any files.
 public/orders/*
