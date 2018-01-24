@@ -14,11 +14,11 @@ class EmailController extends Controller
  public static function send($order_object)
    {
 	 //Check Log to see if user has recived email before
-	  $a = static::checkLog($order_object);
-	 if($a){
-    //  e-mail found
-	 return true;
-   }
+	 //  $a = static::checkLog($order_object);
+	 // if($a){
+   //  //  e-mail found
+	 // return true;
+   // }
 
 
 
