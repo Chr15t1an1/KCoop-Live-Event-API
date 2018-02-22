@@ -113,7 +113,7 @@ try {
 
 
 //Checks if an order contains a live event
-    public static function isLiveEventorder($singleOrderObject)
+    public static function hasLiveEventorder($singleOrderObject)
     {
         $x = $singleOrderObject;
         //Get Cart
@@ -123,15 +123,38 @@ try {
         foreach ($cart as $item) {
           $product_ids[] = $item->product_id;
          }
+
+
+
+
+         $qualifyingPurchase = 0;
+
+
       //Check for qualifying purchase
       foreach ($product_ids as $line_item_id) {
+
+
+
+//         $a = Event::where('event_id', '=', $line_item_id)->exists();
+//
+// dd($a);
+
         if (Event::where('event_id', '=', $line_item_id)->exists()) {
+          $qualifyingPurchase = $qualifyingPurchase + 1;
+        }else {
+          continue;
+        }
+        if ($qualifyingPurchase >= 1) {
           return true;
+        }else {
+          return false;
         }
 
-        return false;
-
     }
+
+    return false;
+
+
 }
 
     /**
@@ -143,14 +166,21 @@ try {
 	 //Creates new order
     public static function createNewOrder($singleOrderObject)
     {
+
+      // dd($singleOrderObject);
+
       $x = $singleOrderObject;
+      // dd($x);
 
-
-        // Check if order exists in DB
+  //      Check if order exists in DB
       if (Order::where('shopify_order_id', '=', $x->id)->exists()) {
-	  //Cutting off check
-	  return false; // should log
+    //    \Bugsnag::notifyError('createNewOrder fail - Order ID found.');
+    //Cutting off check
+	  return false;
+
       }
+
+
       // Get only Products we care about
       $cart = $x->line_items;
       //Get product ids
@@ -159,43 +189,87 @@ try {
       foreach ($cart as $item) {
         $All_product_ids_in_cart[] = $item->product_id;
        }
-      //Check for qualifying purchase
-      foreach ($All_product_ids_in_cart as $line_item_id) {
-      if (Event::where('event_id', '=', $line_item_id)->exists()) {
-        $product_ids_of_live_events_in_order[] = $line_item_id;
-      }
 
-      // Get quantity of tickets
-      $lineitems_with_Quantity = array();
-      foreach ($cart as $item_in_cart) {
-      $lineitems_with_Quantity[$item_in_cart->product_id] = $item_in_cart->quantity;
-      }
+      // Check for qualifying purchase
+            foreach ($All_product_ids_in_cart as $line_item_id) {
+                  if (Event::where('event_id', '=', $line_item_id)->exists()) {
+                    $product_ids_of_live_events_in_order[] = $line_item_id;
+                  } else {
+                  continue;
+                  }
+                }
 
-        if(isset($x->customer->first_name)){
-        $cx_name = $x->customer->first_name;
-        } else{
-        $cx_name = "N/A";
-          };
-         $a = new Order;
-         //Are nullable to account for manual orders
-         $a->email = $x->contact_email;
-         $a->first_name = $cx_name;
-         $a->shopify_order_id =$x->id;
-         $a->event_id = $product_ids_of_live_events_in_order[0];
-         $a->tickets_created = 0;
-         $a->num_tickets = $lineitems_with_Quantity[$product_ids_of_live_events_in_order[0]];
-         $a->num_tickets_claimed = 0;
-         $a->registration_compleate = 0;
-         $a->secret_key = str_replace("/","",Hash::make($x->id));
-         $a->order_object = serialize($x);
-         $a->save();
-         //Returning Object for email
-         return $a;
+
+
+                  // Get quantity of tickets
+                  $lineitems_with_Quantity = array();
+                  foreach ($cart as $item_in_cart) {
+                  $lineitems_with_Quantity[$item_in_cart->product_id] = $item_in_cart->quantity;
+                  }
+
+
+                  //
+
+
+            // Combine the two arrays to get product Id of qulatify products and quantity.
+
+
+            foreach ($product_ids_of_live_events_in_order as $key => $value) {
+              $quantity_With_product_ids[$value] = $lineitems_with_Quantity[$value];
+            }
+
+
+
+
+
+
+
+
+            // dd($quantity_With_product_ids);
+
+                    if(isset($x->customer->first_name)){
+                    $cx_name = $x->customer->first_name;
+                    } else{
+                    $cx_name = "N/A";
+                      };
+
+
+             $order_object_for_email = array();
+                  foreach ($quantity_With_product_ids as $lineItemId => $lineItemQuantity) {
+
+                            // dd($i);
+                            // dd($lineItemId);
+                              $a = new Order;
+
+                              //Are nullable to account for manual orders
+                              $a->email = $x->contact_email;
+                              $a->first_name = $cx_name;
+                              $a->shopify_order_id =$x->id;
+                              $a->event_id = $lineItemId;
+                              $a->tickets_created = 0;
+                              $a->num_tickets = $lineItemQuantity;
+                              $a->num_tickets_claimed = 0;
+                              $a->registration_compleate = 0;
+                              $a->secret_key = str_replace("/","",Hash::make($x->id));
+                              $a->order_object = serialize($x);
+                              $a->save();
+                              //Returning Object for email
+                            $order_object_for_email[]=$a;
+                            }
+
+                    return $order_object_for_email;
+
+                  // }
+
 
 }
 
 
-    }
+
+
+
+
+
 	//Processes all historic orders
 
     public function ProcessArchive($filename)  {
@@ -209,7 +283,7 @@ try {
       // // Check for Qualifying purchases
       $qualified_purchases = array();
         foreach ($orders_object as $key => $order) {
-        if(static::isLiveEventorder($order)){
+        if(static::hasLiveEventorder($order)){
           $qualified_purchases[] = $order;
         }
       }
@@ -228,13 +302,13 @@ try {
 //Get all Orders from shopify
     public function GetallOrders()
     {
-      try {
+      // try {
 
 
 
       // ///Get totlal number of orders.
       $url = "https://8f2ad2acc06a59b6c9cb500028ff58bb:3c620d20a60aa74839f265d8ba6286f4@knowledgecoop-2.myshopify.com";
-      $cmd = '/admin/orders/count.json';
+      $cmd = '/admin/orders/count.json?created_at_min=2017-12-12T16:15:47-04:00';
       $order_count = file_get_contents($url.$cmd);
       $count = json_decode($order_count);
       $count = $count->count;
@@ -266,10 +340,10 @@ try {
 
       return "Orders received and processed.";
 
-    } catch (\Exception $e) {
-      	\Bugsnag::notifyError('issue processing orders', $e);
-      return "Error with getting processing/orders";
-    }
+    // } catch (\Exception $e) {
+    //   	\Bugsnag::notifyError('issue processing orders', $e);
+    //   return "Error with getting processing/orders";
+    // }
 
     }
 

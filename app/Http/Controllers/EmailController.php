@@ -13,60 +13,58 @@ class EmailController extends Controller
 #Send email to user
  public static function send($order_object)
    {
-	 //Check Log to see if user has recived email before
-	 //  $a = static::checkLog($order_object);
-	 // if($a){
-   //  //  e-mail found
-	 // return true;
-   // }
+
+
+$orderObject = $order_object;
+
+foreach ($order_object as  $key => $orderObject) {
+
+  $eventId = $orderObject->event_id;
+
+  $eventObject = \App\Event::where('event_id', $eventId)->first();
+  $eventName = $eventObject->name;
+  $numberOfTickets = $orderObject->num_tickets;
+
+
+  if(empty($orderObject->first_name)){
+         $name = "There";
+   }else {
+     $name = $orderObject->first_name;
+   }
+   $key = $orderObject->secret_key;
+
+  $email = $orderObject->email;
+
+  $data = array('name' => $name, 'key' => $key, 'email'=> $email,'numberOfTickets' => $numberOfTickets,'eventName' => $eventName,);
+
+  // If there is an error sending the message send me an email with shopify order id
+       try {
+         Mail::send('emails.send',$data, function ($message) use ($email)
+         {
+             $message->from('info@knowledgecoop.com', 'Knowledge Coop');
+             $message->to($email);
+         $subject = "Please complete registration";
+         $message->subject($subject);
+         });
+       } catch (\Exception $e) {
+           \Bugsnag::notifyError('issue.sending.email', $e);
+           static::notify_admin_baduser_data($orderObject->shopify_order_id);
+       }
+
+
+}
 
 
 
 
-	   $orderObject = $order_object;
 
-
-     $eventId = $orderObject->event_id;
-
-     $eventObject = \App\Event::where('event_id', $eventId)->first();
-
-     $eventName = $eventObject->name;
-
-     $numberOfTickets = $orderObject->num_tickets;
-
-
-	  if(empty($orderObject->first_name)){
-            $name = "There";
-      }else {
-        $name = $orderObject->first_name;
-      }
-      $key = $orderObject->secret_key;
-
-	  $email = $order_object->email;
-
-
-	   $data = array('name' => $name, 'key' => $key, 'email'=> $email,'numberOfTickets' => $numberOfTickets,'eventName' => $eventName,);
-
-// If there is an error sending the message send me an email with shopify order id
-          try {
-            Mail::send('emails.send',$data, function ($message) use ($email)
-            {
-                $message->from('info@knowledgecoop.com', 'Knowledge Coop');
-                $message->to($email);
-            $subject = "Please complete registration";
-            $message->subject($subject);
-            });
-          } catch (\Exception $e) {
-
-
-            	\Bugsnag::notifyError('issue.sending.email', $e);
-
-              static::notify_admin_baduser_data($orderObject->shopify_order_id);
-          }
+  return response()->json(['message' => 'Request completed']);
 
 
 
-       return response()->json(['message' => 'Request completed']);
+
+
+
    }
 
 //Check Log to see if user has recived email before
@@ -120,7 +118,7 @@ class EmailController extends Controller
 
 
 
-	public static function in_array_r($needle, $haystack, $strict = false) {
+public static function in_array_r($needle, $haystack, $strict = false) {
     foreach ($haystack as $item) {
         if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && static::in_array_r($needle, $item, $strict))) {
             return true;
@@ -132,24 +130,17 @@ class EmailController extends Controller
 
 
 
-
 public static function ManualSend($orderId)
-   {
-	   //return $orderId;
+{
  $orderObject = \App\Order::find($orderId);
 
-////
 
- $eventId = $orderObject->event_id;
+$eventId = $orderObject->event_id;
 
  $eventObject = \App\Event::where('event_id', $eventId)->first();
-
-
  $eventName = $eventObject->name;
 ////
-
   $numberOfTickets = $orderObject->num_tickets;
-
 	  //return $orderObject;
 	 // $orderObject = $order_object;
 	  if(empty($orderObject->first_name)){
@@ -161,9 +152,8 @@ public static function ManualSend($orderId)
 
 	     $email = $orderObject->email;
 
-
 	   $data = array('name' => $name, 'key' => $key, 'email'=> $email,'numberOfTickets' => $numberOfTickets,'eventName' => $eventName,);
-      // Respond to ajax request with message. Log errors.
+     // Respond to ajax request with message. Log errors.
           try {
 
             Mail::send('emails.send',$data, function ($message) use ($email)
@@ -192,8 +182,7 @@ public static function ManualSend($orderId)
             //response()->json(['message' => 'Request resulted in error']);
           }
 
-
-   }
+      }
 
 
 

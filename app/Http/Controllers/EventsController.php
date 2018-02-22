@@ -79,9 +79,15 @@ class EventsController extends Controller
 			#Gets all tickets for an event. Order ID is available.
     $event = Event::with('tickets')->where('event_id', '=', $product_id)->get();
 
+
+
+
+
+
 	 	if($event->isEmpty()){
 			 return response()->view('errors.missing', [], 404);
 			}
+
 
 		//Strip for tickets
 		$event = $event[0];
@@ -100,7 +106,7 @@ class EventsController extends Controller
 
 		$tickets = $non_archived_tickets;
 
-
+// dd(count($tickets));
 
 		//decending
 		//$tickets = $tickets->sortBy('order_id',SORT_REGULAR, true);

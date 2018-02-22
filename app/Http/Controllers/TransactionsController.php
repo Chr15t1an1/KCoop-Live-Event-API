@@ -9,6 +9,9 @@ use App\Event;
 class TransactionsController extends Controller
 {
     public function catchPostfromShoppify(){
+
+
+
     //Catch Request
 		$request = Request();
 
@@ -20,20 +23,32 @@ class TransactionsController extends Controller
 
 
 //Sending Object to
-    if(OrdersController::isLiveEventorder($payload_object)){
+    if(OrdersController::hasLiveEventorder($payload_object)){
+
+
+      // dd('test');
+      // dd($payload_object);
 
 		//returning bool should be returning object.
 	  //This was because it was checking for duplicate
 	 //Shopify orders
 	  $order_object = OrdersController::createNewOrder($payload_object);
-      if(!$order_object){
+
+    $order_objects = $order_object;
+
+      if(!$order_objects){
 		// Order has been processed before
 		  return 'Thank you';
-		  }
+    }
 
-	  TicketsController::create();
+
+
+	      TicketsController::create();
        //// Send Email to Order-er
-     $a =  EmailController::send($order_object);
+
+
+
+       $a =  EmailController::send($order_objects);
     }
 
 
@@ -64,7 +79,7 @@ try {
 } catch (Exception $e) {
     //return $e;
 
-    \Bugsnag::notifyError('Error getting Shopify products', $e);
+    \Bugsnag::notifyError('Error getting Shopify products', 'aaaaa'.$e);
     return "Request resulted in error";
     }
 }
