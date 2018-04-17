@@ -22,6 +22,9 @@ Homestead.json
 #ignore email log
 public/emails/log.txt
 
+#Ignore exports
+public/*
+
 
 # Want to keep orders dir without any files.
 public/orders/*
