@@ -460,13 +460,13 @@ form.hs-form-233559f8-5c50-4329-abaa-854d89171972_119af957-fb00-4065-9ad5-0a01f4
 	              </h1>
 
 
-	            <div class="responsive-menu-container">
+	            <!-- <div class="responsive-menu-container">
 	              <div class="responsive-menu">
 	                <span class="bar"></span>
 	                <span class="bar"></span>
 	                <span class="bar"></span>
 	              </div>
-	            </div>
+	            </div> -->
 	          </div>
 	          <div class="grid__item large--three-quarters large--text-right">
 	            <div class="top-menu">
@@ -513,7 +513,7 @@ form.hs-form-233559f8-5c50-4329-abaa-854d89171972_119af957-fb00-4065-9ad5-0a01f4
 
 		              <a href="/account/login" id="customer_login_link">LOGIN</a>
 
-	              <a href="/cart" class="site-header__cart-toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false"><span>CART 5</span></a>
+	              <!-- <a href="/cart" class="site-header__cart-toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false"><span>CART 5</span></a> -->
 
 	            </div>
 	            <div class="main-nav">
